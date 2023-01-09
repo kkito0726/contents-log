@@ -66,6 +66,7 @@ app.post("/booklog", (req, res) => {
 
 // 既存のレコードを更新
 app.put("/booklog/:id", (req, res) => {
+  res.set({ "Access-Control-Allow-Origin": "*" });
   const id = req.params.id;
   // 例外処理
   if (!(req.body.title && req.body.comment)) {
@@ -89,6 +90,7 @@ app.put("/booklog/:id", (req, res) => {
 
 //レコードの削除
 app.delete("/booklog/:id", (req, res) => {
+  res.set({ "Access-Control-Allow-Origin": "*" });
   const str_idx = String(req.params.id);
 
   const q = "UPDATE booklog SET deleted_at=? WHERE id=?";
