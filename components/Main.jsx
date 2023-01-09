@@ -4,11 +4,24 @@ const url = "http://localhost:4000";
 
 export const Main = () => {
   const [data, setData] = useState([]);
-  useEffect(() => {
-    (async () => {
+  const getDb = async () => {
       const res = await (await fetch(`${url}/booklog`)).json();
+    console.log(res.status);
       setData((prevData) => [...prevData, ...res]);
-    })();
+  };
+
+  const deleteDb = async (id) => {
+    console.log(`${url}/booklog/${id}`);
+    const res = await fetch(`${url}/booklog/${id}`, {
+      method: "DELETE",
+    });
+    console.log(`${res.status}: レコードを削除しました`);
+    // setData([]);
+    setData((prevData) => [...prevData, ...res]);
+  };
+
+  useEffect(() => {
+    getDb();
   }, []);
 
   return (
