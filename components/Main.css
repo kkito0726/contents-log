@@ -1,0 +1,12 @@
+.contents {
+  display: flex;
+  background-color: aliceblue;
+}
+.content {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.deleteButton {
+  margin-left: auto;
+}
