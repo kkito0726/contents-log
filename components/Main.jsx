@@ -10,7 +10,7 @@ export const Main = () => {
   const getDb = async () => {
     const res = await (await fetch(`${url}/booklog`)).json();
     console.log(res.status);
-    setData((prevData) => [...prevData, ...res]);
+    setData([...res]);
   };
 
   const deleteDb = async (id) => {
@@ -35,7 +35,7 @@ export const Main = () => {
   };
 
   const handleCancel = (id) => {
-    setEditId((prevEditId) => prevEditId.splice(prevEditId.indexOf(id), 1));
+    setEditId((prevEditId) => prevEditId.filter((num) => num !== id));
     if (editId.length == 0) {
       setIsEdit((prevIsEdit) => false);
     }
@@ -60,14 +60,14 @@ export const Main = () => {
                 </button>
 
                 {isEdit && editId.indexOf(jsonData.id) !== -1 ? (
-                  <>
-                    <input type="text" placeholder={jsonData.title} />
-                    <input type="text" placeholder={jsonData.comment} />
+                  <div className="edit">
+                    <input type="text" value={jsonData.title} />
+                    <input type="text" value={jsonData.comment} />
                     <button>送信</button>
                     <button onClick={() => handleCancel(jsonData.id)}>
                       キャンセル
                     </button>
-                  </>
+                  </div>
                 ) : (
                   <button onClick={() => handleEdit(jsonData.id)}>編集</button>
                 )}
