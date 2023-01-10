@@ -76,16 +76,32 @@ export const Main = () => {
           })}
         </ol>
       </div>
+      <h2 className="submitTitle">データの追加</h2>
 
-      <div>
-        <label htmlFor="">
-          TITLE:
-          <input type="text" placeholder="Titleを入力" />
-        </label>
-        <label htmlFor="">
-          COMMENT:
-          <input type="text" placeholder="Commentを入力" />
-        </label>
+      <div className="submit">
+        <div className="title">
+          <label htmlFor="">TITLE:</label>
+          <input
+            type="text"
+            placeholder="Titleを入力"
+            onChange={handleInputTitle}
+          />
+        </div>
+
+        <div className="comment">
+          <label htmlFor="">COMMENT:</label>
+          <textarea
+            className="commentBox"
+            type="text"
+            placeholder="Commentを入力"
+            onChange={handleInputComment}
+            rows="6"
+          />
+        </div>
+
+        <button className="submitButton" onClick={handleSubmit}>
+          追加
+        </button>
       </div>
     </div>
   );

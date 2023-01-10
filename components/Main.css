@@ -10,3 +10,35 @@
 .deleteButton {
   margin-left: auto;
 }
+
+.edit {
+  background-color: aliceblue;
+}
+
+.submit {
+  background-color: aquamarine;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+}
+.submitTitle {
+  padding: 0;
+}
+.title {
+  display: flex;
+  flex-direction: column;
+}
+.comment {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.comment {
+  height: 6rem;
+}
+
+.submitButton {
+  margin-top: 10px;
+}
