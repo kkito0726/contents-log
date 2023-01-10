@@ -6,6 +6,8 @@ export const Main = () => {
   const [data, setData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [editId, setEditId] = useState([]);
+  const [inputTitle, setInputTitle] = useState("");
+  const [inputComment, setInputComment] = useState("");
 
   const getDb = async () => {
     const res = await (await fetch(`${url}/booklog`)).json();
@@ -13,25 +15,67 @@ export const Main = () => {
     setData([...res]);
   };
 
-  const deleteDb = async (id) => {
-    console.log(`${url}/booklog/${id}`);
-    const res = await fetch(`${url}/booklog/${id}`, {
-      method: "DELETE",
+  const postDb = async () => {
+    const sendData = JSON.stringify({
+      title: inputTitle,
+      comment: inputComment,
     });
-    console.log(`${res.status}: レコードを削除しました`);
-    // setData([]);
-    setData((prevData) => [...prevData, ...res]);
+    const res = await fetch(`${url}/booklog`, {
+      method: "POST",
+      body: sendData,
+    });
+    console.log(sendData);
+    console.log(res.status);
+  };
+
+  const putDb = async (id) => {
+    const res = await fetch(`${url}/booklog/${id}`, {
+      method: "PUT",
+    });
+    console.log(res.status);
+  };
+  const deleteDb = async (id) => {
+    const res = await fetch(`${url}/booklog/${id}`, { method: "DELETE" });
+    console.log(res.status);
   };
 
   useEffect(() => {
     getDb();
   }, []);
 
-  const handleEdit = (id) => {
-    if (editId.indexOf(id) !== -1 && isEdit) return;
+  const handleInputTitle = (e) => {
+    setInputTitle(e.target.value);
+  };
+
+  const handleInputComment = (e) => {
+    setInputComment(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (inputTitle && inputComment) {
+      console.log(`${inputTitle} & ${inputComment}`);
+      postDb();
+      getDb();
+    } else {
+      alert("入力内容が不十分です");
+    }
+  };
+  const handleDelete = (jsonData) => {
+    const confirmRes = confirm("${jsonData.id}を削除します");
+    if (confirmRes) {
+      console.log(`${url}/booklog/${jsonData.id}`);
+      deleteDb(jsonData.id);
+      getDb();
+      console.log(`${jsonData.title}`);
+    }
+  };
+  const handleEdit = (jsonData) => {
+    if (editId.indexOf(jsonData.id) !== -1 && isEdit) return;
     setIsEdit((prevIsEdit) => true);
-    setEditId((prevEditId) => [...prevEditId, id]);
-    console.log(editId);
+    setEditId((prevEditId) => [...prevEditId, jsonData.id]);
+
+    setInputTitle(jsonData.title);
+    setInputComment(jsonData.comment);
   };
 
   const handleCancel = (id) => {
@@ -53,7 +97,7 @@ export const Main = () => {
               <div key={jsonData.id} className="content">
                 <li>{`Title: ${jsonData.title} Comment: ${jsonData.comment}`}</li>
                 <button
-                  onClick={() => deleteDb(jsonData.id)}
+                  onClick={() => handleDelete(jsonData)}
                   className="deleteButton"
                 >
                   削除
@@ -69,7 +113,7 @@ export const Main = () => {
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => handleEdit(jsonData.id)}>編集</button>
+                  <button onClick={() => handleEdit(jsonData)}>編集</button>
                 )}
               </div>
             );
