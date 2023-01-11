@@ -21,6 +21,7 @@ connection.connect((err) => {
 });
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("sever");
@@ -29,7 +30,6 @@ app.get("/", (req, res) => {
 
 // データベースの情報を取得
 app.get("/booklog", (req, res) => {
-  res.set({ "Access-Control-Allow-Origin": "*" });
   connection.query(
     "SELECT * FROM booklog WHERE deleted_at IS NULL",
     (err, response) => {
@@ -41,7 +41,6 @@ app.get("/booklog", (req, res) => {
 
 // レコードを追加
 app.post("/booklog", (req, res) => {
-  res.set({ "Access-Control-Allow-Origin": "*" });
   const bookLog = {
     title: req.body.title,
     comment: req.body.comment,
@@ -66,7 +65,6 @@ app.post("/booklog", (req, res) => {
 
 // 既存のレコードを更新
 app.put("/booklog/:id", (req, res) => {
-  res.set({ "Access-Control-Allow-Origin": "*" });
   const id = req.params.id;
   // 例外処理
   if (!(req.body.title && req.body.comment)) {
@@ -90,7 +88,6 @@ app.put("/booklog/:id", (req, res) => {
 
 //レコードの削除
 app.delete("/booklog/:id", (req, res) => {
-  res.set({ "Access-Control-Allow-Origin": "*" });
   const str_idx = String(req.params.id);
 
   const q = "UPDATE booklog SET deleted_at=? WHERE id=?";
@@ -101,7 +98,6 @@ app.delete("/booklog/:id", (req, res) => {
   res.send(`Deleted id = ${str_idx}`);
 });
 
-app.use(cors);
 app.listen(port, () => {
   console.log("sever started");
 });
