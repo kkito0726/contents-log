@@ -22,6 +22,9 @@ export const Main = () => {
     });
     const res = await fetch(`${url}/booklog`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: sendData,
     });
     console.log(sendData);
@@ -51,21 +54,21 @@ export const Main = () => {
     setInputComment(e.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (inputTitle && inputComment) {
       console.log(`${inputTitle} & ${inputComment}`);
-      postDb();
-      getDb();
+      await postDb();
+      await getDb();
     } else {
       alert("入力内容が不十分です");
     }
   };
-  const handleDelete = (jsonData) => {
-    const confirmRes = confirm("${jsonData.id}を削除します");
+  const handleDelete = async (jsonData) => {
+    const confirmRes = confirm(`${jsonData.title}を削除します`);
     if (confirmRes) {
       console.log(`${url}/booklog/${jsonData.id}`);
-      deleteDb(jsonData.id);
-      getDb();
+      await deleteDb(jsonData.id);
+      await getDb();
       console.log(`${jsonData.title}`);
     }
   };
