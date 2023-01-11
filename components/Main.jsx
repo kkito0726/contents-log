@@ -31,12 +31,17 @@ export const Main = () => {
     console.log(res.status);
   };
 
-  const putDb = async (id) => {
+  const putDb = async (id, putData) => {
     const res = await fetch(`${url}/booklog/${id}`, {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(putData),
     });
     console.log(res.status);
   };
+
   const deleteDb = async (id) => {
     const res = await fetch(`${url}/booklog/${id}`, { method: "DELETE" });
     console.log(res.status);
@@ -62,6 +67,18 @@ export const Main = () => {
     } else {
       alert("入力内容が不十分です");
     }
+  };
+
+  const handlePut = async (jsonData) => {
+    const title = document.querySelector(`#editTitle${jsonData.id}`).value;
+    const comment = document.querySelector(`#editComment${jsonData.id}`).value;
+    const putData = {
+      title: title,
+      comment: comment,
+    };
+    await putDb(jsonData.id, putData);
+    await getDb();
+    console.log(`Title=${title} Comment=${comment}`);
   };
   const handleDelete = async (jsonData) => {
     const confirmRes = confirm(`${jsonData.title}を削除します`);
@@ -108,9 +125,19 @@ export const Main = () => {
 
                 {isEdit && editId.indexOf(jsonData.id) !== -1 ? (
                   <div className="edit">
-                    <input type="text" value={jsonData.title} />
-                    <input type="text" value={jsonData.comment} />
-                    <button>送信</button>
+                    <input
+                      type="text"
+                      id={`editTitle${jsonData.id}`}
+                      placeholder="Titleを入力"
+                      //   value={jsonData.title}
+                    />
+                    <input
+                      type="text"
+                      id={`editComment${jsonData.id}`}
+                      placeholder="Commentを入力"
+                      //   value={jsonData.comment}
+                    />
+                    <button onClick={() => handlePut(jsonData)}>送信</button>
                     <button onClick={() => handleCancel(jsonData.id)}>
                       キャンセル
                     </button>
