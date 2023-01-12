@@ -89,8 +89,13 @@ export const Main = () => {
       console.log(`${jsonData.title}`);
     }
   };
+  const handleBackgroundColor = (jsonData) => {
+    const target = document.querySelector(`#content${jsonData.id}`);
+    target.style.backgroundColor = "orange";
+  };
   const handleEdit = (jsonData) => {
     if (editId.indexOf(jsonData.id) !== -1 && isEdit) return;
+    handleBackgroundColor(jsonData);
     setIsEdit((prevIsEdit) => true);
     setEditId((prevEditId) => [...prevEditId, jsonData.id]);
 
@@ -114,7 +119,11 @@ export const Main = () => {
         <ol>
           {data.map((jsonData) => {
             return (
-              <div key={jsonData.id} className="content">
+              <div
+                key={jsonData.id}
+                className="content"
+                id={`content${jsonData.id}`}
+              >
                 <li>{`Title: ${jsonData.title} Comment: ${jsonData.comment}`}</li>
                 <button
                   onClick={() => handleDelete(jsonData)}
@@ -124,7 +133,7 @@ export const Main = () => {
                 </button>
 
                 {isEdit && editId.indexOf(jsonData.id) !== -1 ? (
-                  <div className="edit">
+                  <div className="edit" id={`edit${jsonData.id}`}>
                     <input
                       type="text"
                       id={`editTitle${jsonData.id}`}
