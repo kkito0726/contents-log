@@ -2,6 +2,7 @@ import classes from "./Links.module.css";
 import { useState, useEffect } from "react";
 import { url } from "../config/access.jsx";
 import { Link } from "next/link";
+import { v4 as uuidv4 } from "uuid";
 
 export const Links = () => {
   const [categories, setCategories] = useState([]);
@@ -23,7 +24,7 @@ export const Links = () => {
     <>
       {categories.map((category, idx) => {
         return (
-          <div className="header">
+          <div className="header" key={uuidv4()}>
             <a key={idx} href={category.href}>
               {category.label}
             </a>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { url } from "../config/access.jsx";
+import { v4 as uuidv4 } from "uuid";
 
 export const Main = () => {
   const [data, setData] = useState([]);
@@ -162,13 +163,13 @@ export const Main = () => {
                     <div className="category">
                       <label htmlFor="">CATEGORY: </label>
                       <select name="" id={`editCategory${jsonData.id}`}>
-                        <option value="magazine" key={1}>
+                        <option value="magazine" key={uuidv4()}>
                           マンガ
                         </option>
-                        <option value="game" key={2}>
+                        <option value="game" key={uuidv4()}>
                           ゲーム
                         </option>
-                        <option value="programming" key={3}>
+                        <option value="programming" key={uuidv4()}>
                           プログラミング
                         </option>
                       </select>
@@ -201,13 +202,13 @@ export const Main = () => {
         <div className="category">
           <label htmlFor="">CATEGORY: </label>
           <select name="" id="" onChange={handleCategory}>
-            <option value="magazine" key={1}>
+            <option value="magazine" key={uuidv4()}>
               マンガ
             </option>
-            <option value="game" key={2}>
+            <option value="game" key={uuidv4()}>
               ゲーム
             </option>
-            <option value="programming" key={3}>
+            <option value="programming" key={uuidv4()}>
               プログラミング
             </option>
           </select>
