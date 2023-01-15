@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-
-const url = "http://localhost:4000";
+import { url } from "../config/access.jsx";
 
 export const Main = () => {
   const [data, setData] = useState([]);
