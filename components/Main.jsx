@@ -7,16 +7,17 @@ export const Main = () => {
   const [editId, setEditId] = useState([]);
   const [inputTitle, setInputTitle] = useState("");
   const [inputComment, setInputComment] = useState("");
+  const [category, setCategory] = useState("");
 
   const getDb = async () => {
     const res = await (await fetch(`${url}/booklog`)).json();
-    console.log(res.status);
     setData([...res]);
   };
 
   const postDb = async () => {
     const sendData = JSON.stringify({
       title: inputTitle,
+      category: category,
       comment: inputComment,
     });
     const res = await fetch(`${url}/booklog`, {
@@ -71,13 +72,17 @@ export const Main = () => {
   const handlePut = async (jsonData) => {
     const title = document.querySelector(`#editTitle${jsonData.id}`).value;
     const comment = document.querySelector(`#editComment${jsonData.id}`).value;
+    const category = document.querySelector(
+      `#editCategory${jsonData.id}`
+    ).value;
+    console.log(category);
     const putData = {
       title: title,
       comment: comment,
+      category: category,
     };
     await putDb(jsonData.id, putData);
     await getDb();
-    console.log(`Title=${title} Comment=${comment}`);
   };
   const handleDelete = async (jsonData) => {
     const confirmRes = confirm(`${jsonData.title}を削除します`);
@@ -90,6 +95,10 @@ export const Main = () => {
   };
   const handleBackgroundColor = (jsonData) => {
     const target = document.querySelector(`#content${jsonData.id}`);
+    // if (isEdit) {
+    //   target.style.backgroundColor = "aliceblue";
+    //   return;
+    // }
     target.style.backgroundColor = "orange";
   };
   const handleEdit = (jsonData) => {
@@ -103,6 +112,7 @@ export const Main = () => {
   };
 
   const handleCancel = (id) => {
+    // handleBackgroundColor();
     setEditId((prevEditId) => prevEditId.filter((num) => num !== id));
     if (editId.length == 0) {
       setIsEdit((prevIsEdit) => false);
@@ -110,6 +120,10 @@ export const Main = () => {
     console.log(editId);
   };
 
+  const handleCategory = (e) => {
+    setCategory(e.target.value);
+    console.log(category);
+  };
   return (
     <div className="mainPage">
       <h1>消費コンテンツメモアプリ</h1>
@@ -123,7 +137,7 @@ export const Main = () => {
                 className="content"
                 id={`content${jsonData.id}`}
               >
-                <li>{`Title: ${jsonData.title} Comment: ${jsonData.comment}`}</li>
+                <li>{`Title: ${jsonData.title} Category: ${jsonData.category} Comment: ${jsonData.comment}`}</li>
                 <button
                   onClick={() => handleDelete(jsonData)}
                   className="deleteButton"
@@ -145,6 +159,20 @@ export const Main = () => {
                       placeholder="Commentを入力"
                       //   value={jsonData.comment}
                     />
+                    <div className="category">
+                      <label htmlFor="">CATEGORY: </label>
+                      <select name="" id={`editCategory${jsonData.id}`}>
+                        <option value="magazine" key={1}>
+                          マンガ
+                        </option>
+                        <option value="game" key={2}>
+                          ゲーム
+                        </option>
+                        <option value="programming" key={3}>
+                          プログラミング
+                        </option>
+                      </select>
+                    </div>
                     <button onClick={() => handlePut(jsonData)}>送信</button>
                     <button onClick={() => handleCancel(jsonData.id)}>
                       キャンセル
@@ -168,6 +196,21 @@ export const Main = () => {
             placeholder="Titleを入力"
             onChange={handleInputTitle}
           />
+        </div>
+
+        <div className="category">
+          <label htmlFor="">CATEGORY: </label>
+          <select name="" id="" onChange={handleCategory}>
+            <option value="magazine" key={1}>
+              マンガ
+            </option>
+            <option value="game" key={2}>
+              ゲーム
+            </option>
+            <option value="programming" key={3}>
+              プログラミング
+            </option>
+          </select>
         </div>
 
         <div className="comment">
