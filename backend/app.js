@@ -39,15 +39,59 @@ app.get("/booklog", (req, res) => {
   );
 });
 
+// データのカテゴリーを取得
+app.get("/category", (req, res) => {
+  connection.query(
+    "SELECT category FROM booklog GROUP BY category",
+    (err, response) => {
+      if (err) throw err;
+      res.json(response);
+    }
+  );
+});
+
+// マンガのみを取得
+app.get("/magazine", (req, res) => {
+  connection.query(
+    'SELECT * FROM booklog WHERE category = "magazine"',
+    (err, response) => {
+      if (err) throw err;
+      res.json(response);
+    }
+  );
+});
+
+// ゲームのみを追加
+app.get("/game", (req, res) => {
+  connection.query(
+    'SELECT * FROM booklog WHERE category = "game"',
+    (err, response) => {
+      if (err) throw err;
+      res.json(response);
+    }
+  );
+});
+
+// プログラミングのみを追加
+app.get("/programming", (req, res) => {
+  connection.query(
+    'SELECT * FROM booklog WHERE category = "programming"',
+    (err, response) => {
+      if (err) throw err;
+      res.json(response);
+    }
+  );
+});
 // レコードを追加
 app.post("/booklog", (req, res) => {
   const bookLog = {
     title: req.body.title,
     comment: req.body.comment,
+    category: req.body.category,
   };
 
   // 例外処理
-  if (!(bookLog.title && bookLog.comment)) {
+  if (!(bookLog.title && bookLog.comment && bookLog.category)) {
     return res.json({
       ok: false,
       error: "invalid parameter",
@@ -55,10 +99,14 @@ app.post("/booklog", (req, res) => {
   }
 
   // const q = "insert into booklog SET ?"; この書き方だとSQLインジェクションができてしまう
-  const q = "INSERT INTO booklog (title, comment) VALUE (?, ?)";
-  connection.query(q, [bookLog.title, bookLog.comment], (err) => {
-    if (err) throw err;
-  });
+  const q = "INSERT INTO booklog (title, category, comment) VALUE (?, ?, ?)";
+  connection.query(
+    q,
+    [bookLog.title, bookLog.category, bookLog.comment],
+    (err) => {
+      if (err) throw err;
+    }
+  );
 
   res.send("Add record to Table");
 });
@@ -67,7 +115,7 @@ app.post("/booklog", (req, res) => {
 app.put("/booklog/:id", (req, res) => {
   const id = req.params.id;
   // 例外処理
-  if (!(req.body.title && req.body.comment)) {
+  if (!(req.body.title && req.body.comment && req.body.category)) {
     return res.json({
       ok: false,
       error: "invalid parameter",
@@ -75,13 +123,18 @@ app.put("/booklog/:id", (req, res) => {
   }
   const bookLog = {
     title: req.body.title,
+    category: req.body.category,
     comment: req.body.comment,
   };
 
-  const q = `UPDATE booklog SET title=?, comment=? WHERE id=? AND deleted_at IS NULL`;
-  connection.query(q, [bookLog.title, bookLog.comment, id], (err) => {
-    if (err) throw err;
-  });
+  const q = `UPDATE booklog SET title=?, category=?, comment=? WHERE id=? AND deleted_at IS NULL`;
+  connection.query(
+    q,
+    [bookLog.title, bookLog.category, bookLog.comment, id],
+    (err) => {
+      if (err) throw err;
+    }
+  );
 
   res.send(`updated id = ${id}`);
 });
